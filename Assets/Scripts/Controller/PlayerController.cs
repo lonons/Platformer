@@ -31,12 +31,13 @@ namespace Platformer
         private float _jumpTrashHold = 1f;
         private float _yVelocity = 0;
         private float _xVelosity = 0;
-        
+
+        private int _health = 100;
         #endregion
 
         #region CONSTRUCTOR
 
-        public PlayerController(LevelObjectView player)
+        public PlayerController(InteractiveObjectView player)
         {
             _config = Resources.Load<AnimationConfig>("SpriteAnimCfg");
             _playerAnimator = new SpriteAnimatorController(_config);
@@ -46,6 +47,8 @@ namespace Platformer
             
             _rb = _playerView._rb;
             _contactPooler = new ContactPooler(_playerView._colider);
+
+            player.TakeDamage += TakeBullet;
         }
 
         #endregion
@@ -61,6 +64,11 @@ namespace Platformer
 
         public void Update()
         {
+            if (_health <= 0)
+            {
+                _health = 0;
+                _playerView._spriteRenderer.enabled = false;
+            }
             _playerAnimator.Update();
             _contactPooler.Update();
             _xAxisInput = Input.GetAxis("Horizontal");
@@ -92,6 +100,11 @@ namespace Platformer
                     _playerAnimator.StartAnimation(_playerView._spriteRenderer,AnimState.Jump,true,_animationSpeed);
                 }
             }
+        }
+
+        public void TakeBullet(BulletView bulletView)
+        {
+            _health -= bulletView.DamagePoint;
         }
 
         #endregion

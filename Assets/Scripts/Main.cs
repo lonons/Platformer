@@ -9,7 +9,7 @@ namespace Platformer
         #region SERIALIZE FIELDS
 
         [SerializeField]
-        private LevelObjectView _playerView;
+        private InteractiveObjectView _playerView;
         [SerializeField]
         private CannonView _cannonView;
         #endregion
@@ -18,6 +18,7 @@ namespace Platformer
 
         private PlayerController _playerController;
         private CannonController _canonController;
+        private EmitterController _emitterController;
         
         #endregion
 
@@ -27,12 +28,14 @@ namespace Platformer
         {
             _playerController = new PlayerController(_playerView);
             _canonController = new CannonController(_cannonView._muzzleT, _playerView.transform);
+            _emitterController = new EmitterController(_cannonView._bullets, _cannonView._emitterT);
         }
 
         void Update()
         {
             _playerController.Update();
             _canonController.Update();
+            _emitterController.Update();
         }
 
         #endregion
